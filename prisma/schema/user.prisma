@@ -1,0 +1,99 @@
+model User {
+  userId      String   @id @default(dbgenerated("uuid_generate_v4()")) @map("user_id") @db.Uuid
+  username    String   @unique
+  phoneNumber String   @unique @map("phone_number")
+  email       String?  @unique
+  pin         String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+
+  userProfile        UserProfile?
+  userPreference     UserPreference?
+  userMatches        MatchedUser[]       @relation("userMatch")
+  userMatchers       MatchedUser[]       @relation("userMatcher")
+  userActionFrom     UserAction[]        @relation("userActionFrom")
+  userActionTo       UserAction[]        @relation("userActionTo")
+  userPremiumRequest UserPremiumRequest?
+
+  @@map("users")
+}
+
+model UserProfile {
+  userProfileId String    @id @default(dbgenerated("uuid_generate_v4()")) @map("user_profile_id") @db.Uuid
+  userId        String    @unique @map("user_id") @db.Uuid
+  genderId      String?   @map("gender_id") @db.Uuid
+  zodiacId      String?   @map("zodiac_id") @db.Uuid
+  fullName      String?   @map("full_name")
+  photo         String[]  @default([])
+  bio           String?   @db.Text
+  birthDate     DateTime? @db.Date
+  location      String?
+  hometown      String?
+  isVerified    Boolean   @default(false) @map("is_verified")
+  isPremium     Boolean   @default(false) @map("is_premium")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+
+  user   User       @relation(references: [userId], fields: [userId])
+  gender MstGender? @relation(references: [genderId], fields: [genderId])
+  zodiac MstZodiac? @relation(references: [zodiacId], fields: [zodiacId])
+
+  @@map("user_profiles")
+}
+
+model UserPreference {
+  userPreferenceId String   @id @default(dbgenerated("uuid_generate_v4()")) @map("user_preference_id") @db.Uuid
+  userId           String   @unique @map("user_id") @db.Uuid
+  genderId         String   @map("gender_id") @db.Uuid
+  radius           Int
+  minAge           Int      @map("min_age")
+  maxAge           Int      @map("max_age")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @map("updated_at")
+
+  user   User      @relation(references: [userId], fields: [userId])
+  gender MstGender @relation(references: [genderId], fields: [genderId])
+
+  @@map("user_preferences")
+}
+
+model MatchedUser {
+  matchedUserId String    @id @default(dbgenerated("uuid_generate_v4()")) @map("matched_user_id") @db.Uuid
+  userId        String    @map("user_id") @db.Uuid
+  matcherId     String    @map("matcher_id") @db.Uuid
+  expiredAt     DateTime? @map("expired_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+
+  user    User @relation("userMatch", references: [userId], fields: [userId])
+  matcher User @relation("userMatcher", references: [userId], fields: [matcherId])
+
+  @@map("matched_users")
+}
+
+model UserAction {
+  userActionId String          @id @default(dbgenerated("uuid_generate_v4()")) @map("user_action_id") @db.Uuid
+  fromUserId   String          @map("from_user_id") @db.Uuid
+  toUserId     String          @map("to_user_id") @db.Uuid
+  action       SwipeActionEnum
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @default(now()) @map("updated_at")
+
+  fromUser User @relation("userActionFrom", references: [userId], fields: [fromUserId])
+  toUser   User @relation("userActionTo", references: [userId], fields: [toUserId])
+
+  @@map("user_actions")
+}
+
+model UserPremiumRequest {
+  userPremiumRequestId String   @id @default(dbgenerated("uuid_generate_v4()")) @map("user_action_id") @db.Uuid
+  userId               String   @unique @map("user_id") @db.Uuid
+  requestedAt          DateTime @default(now()) @map("requested_at")
+  isProcessed          Boolean  @default(false) @map("is_processed")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @default(now()) @map("updated_at")
+
+  user User @relation(references: [userId], fields: [userId])
+
+  @@map("user_premium_requests")
+}

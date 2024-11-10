@@ -1,0 +1,18 @@
+model MstGender {
+  genderId String @id @default(dbgenerated("uuid_generate_v4()")) @map("gender_id") @db.Uuid
+  value    String @unique
+
+  userProfiles    UserProfile[]
+  userPreferences UserPreference[]
+
+  @@map("mst_genders")
+}
+
+model MstZodiac {
+  zodiacId String @id @default(dbgenerated("uuid_generate_v4()")) @map("zodiac_id") @db.Uuid
+  value    String @unique
+
+  userProfiles UserProfile[]
+
+  @@map("mst_zodiacs")
+}

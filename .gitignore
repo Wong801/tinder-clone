@@ -1,0 +1,7 @@
+node_modules
+dist
+.vscode
+coverage
+public
+.env
+junit.xml
