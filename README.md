@@ -61,7 +61,7 @@ Variable          | Description                                                 
 
 ### Project Setup
 
-- Install Node.js and npm
+- Install Node.js and npm (recommended using node v.20)
 - Install pnpm
 
   ```sh
@@ -72,6 +72,12 @@ Variable          | Description                                                 
 
   ```sh
   pnpm install
+  ```
+
+- Install nodemon (optional). This project is not shipped nodemon by default
+
+  ```sh
+  npm i -g nodemon
   ```
 
 - Set appropriate value for .env
