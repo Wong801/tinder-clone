@@ -100,6 +100,12 @@ Variable          | Description                                                 
   pnpm run start
   ```
 
+### Run unit test (jest)
+
+```sh
+pnpm run test
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
@@ -111,3 +117,17 @@ pnpm run dev
 ```sh
 pnpm run build
 ```
+
+### Added Bonus
+
+- Deployments. Added Dockerfile
+
+  ```sh
+  docker build .
+  ```
+
+- ESlint
+
+  ```sh
+  pnpm run lint
+  ```
