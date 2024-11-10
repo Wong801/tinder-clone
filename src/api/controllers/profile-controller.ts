@@ -114,4 +114,16 @@ export default class ProfileController extends Controller<ProfileService> {
       }
     };
   }
+
+  listMatchedProfile(): RequestHandler {
+    return async (req, res) => {
+      const data = this.service.getMatchedProfile({
+        id: res.locals.user.userId,
+      });
+
+      res.locals.response.setResults({
+        data,
+      });
+    };
+  }
 }

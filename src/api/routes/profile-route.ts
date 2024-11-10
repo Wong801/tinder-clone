@@ -28,6 +28,11 @@ export default function ({ router = Router() }: { router?: Router }) {
     limitActionMiddleware(10, 'get-random-profile'),
     defaultMiddleware(controller.getRandomProfile())
   );
+  router.get(
+    '/matched',
+    authMiddleware(),
+    defaultMiddleware(controller.listMatchedProfile())
+  );
 
   return router;
 }

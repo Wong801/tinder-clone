@@ -203,4 +203,52 @@ export default class ProfileService extends Service {
     });
     return true;
   }
+
+  async getMatchedProfile({ id }: { id: string }) {
+    const basedOnUser = await this.prisma.matchedUser.findMany({
+      where: {
+        userId: id,
+      },
+      select: {
+        matcher: {
+          select: {
+            userProfile: {
+              include: {
+                gender: true,
+                zodiac: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    const basedOnMatcher = await this.prisma.matchedUser.findMany({
+      where: {
+        matcherId: id,
+      },
+      select: {
+        user: {
+          select: {
+            userProfile: {
+              include: {
+                gender: true,
+                zodiac: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const profiles = [];
+
+    basedOnUser.forEach((user) => {
+      profiles.push(user.matcher.userProfile);
+    });
+    basedOnMatcher.forEach((matcher) => {
+      profiles.push(matcher.user.userProfile);
+    });
+
+    return profiles;
+  }
 }
